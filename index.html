@@ -1,1 +1,61 @@
-"Hello World"
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 블로그</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a class="blog-title" href="/">✏️ 내 블로그</a>
+    </nav>
+  </header>
+
+  <main>
+    <ul class="post-list" id="post-list">
+      <li class="loading">글 목록을 불러오는 중...</li>
+    </ul>
+  </main>
+
+  <footer>
+    <p>wonjiko6718.github.io</p>
+  </footer>
+
+  <script>
+    async function loadPosts() {
+      const list = document.getElementById('post-list');
+      try {
+        const res = await fetch('/posts/list.json');
+        if (!res.ok) throw new Error('list.json을 찾을 수 없습니다.');
+        const posts = await res.json();
+
+        if (posts.length === 0) {
+          list.innerHTML = '<li class="loading">아직 글이 없습니다.</li>';
+          return;
+        }
+
+        list.innerHTML = posts.map(post => `
+          <li class="post-item">
+            <a class="post-link" href="/post.html?id=${post.id}">
+              <span class="post-title">${post.title}</span>
+              <span class="post-meta">
+                ${post.category ? `<span class="post-category">${post.category}</span>` : ''}
+                <span class="post-date">${post.date}</span>
+              </span>
+            </a>
+          </li>
+        `).join('');
+
+      } catch (e) {
+        list.innerHTML = `<li style="padding:20px"><div class="error-msg">오류: ${e.message}</div></li>`;
+      }
+    }
+
+    loadPosts();
+  </script>
+
+</body>
+</html>

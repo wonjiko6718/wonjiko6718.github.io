@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>글 읽기 - 내 블로그</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- marked.js: MD → HTML 변환 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a class="blog-title" href="/">✏️ 내 블로그</a>
+    </nav>
+  </header>
+
+  <main>
+    <a class="back-link" href="/">← 목록으로</a>
+    <div id="post-container">
+      <p class="loading">글을 불러오는 중...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>wonjiko6718.github.io</p>
+  </footer>
+
+  <script>
+    async function loadPost() {
+      const container = document.getElementById('post-container');
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      if (!id) {
+        container.innerHTML = '<div class="error-msg">글 ID가 없습니다. <a href="/">목록으로 돌아가기</a></div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/posts/${id}.md`);
+        if (!res.ok) throw new Error('글을 찾을 수 없습니다.');
+        const raw = await res.text();
+
+        // Front matter (--- ... ---) 파싱 후 본문 분리
+        const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+        let meta = {};
+        let body = raw;
+
+        if (fmMatch) {
+          body = fmMatch[2];
+          fmMatch[1].split('\n').forEach(line => {
+            const [key, ...val] = line.split(':');
+            if (key) meta[key.trim()] = val.join(':').trim();
+          });
+        }
+
+        // 페이지 제목 업데이트
+        if (meta.title) {
+          document.title = meta.title + ' - 내 블로그';
+        }
+
+        // HTML 렌더링
+        container.innerHTML = `
+          <article>
+            <div class="post-header">
+              <h1>${meta.title || id}</h1>
+              <div class="post-meta">
+                ${meta.category ? `<span class="post-category">${meta.category}</span>` : ''}
+                ${meta.date ? `<span class="post-date">${meta.date}</span>` : ''}
+              </div>
+            </div>
+            <div class="post-content">
+              ${marked.parse(body)}
+            </div>
+          </article>
+        `;
+
+      } catch (e) {
+        container.innerHTML = `<div class="error-msg">오류: ${e.message} <a href="/">목록으로 돌아가기</a></div>`;
+      }
+    }
+
+    loadPost();
+  </script>
+
+</body>
+</html>
