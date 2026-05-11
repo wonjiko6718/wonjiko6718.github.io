@@ -1,12 +1,18 @@
-[
-  {
-    "id": "2026-05-11-unreal-engine-build-error",
-    "title": "언리얼 엔진 빌드 오류 해결",
-    "date": "2026-05-11",
-    "category": [
-      "UnrealEngine",
-      "UnrealC++"
-    ],
-    "thumbnail": ""
-  }
-]
+{
+  "boards": [
+    "언리얼 엔진"
+  ],
+  "posts": [
+    {
+      "id": "언리얼 엔진/2026-05-11-unreal-engine-build-error",
+      "title": "언리얼 엔진 빌드 오류 해결",
+      "date": "2026-05-11",
+      "category": [
+        "UnrealEngine",
+        "UnrealC++"
+      ],
+      "thumbnail": "",
+      "board": "언리얼 엔진"
+    }
+  ]
+}

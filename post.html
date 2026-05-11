@@ -3,47 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wonji Ko's Development Record</title>
+  <title>글 읽기 - Wonji Ko's Development Record</title>
   <link rel="stylesheet" href="/assets/css/style.css">
-  <!-- marked.js: MD → HTML 변환 라이브러리 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
   <header>
     <nav>
-      <a class="blog-title" href="/">Wonji Ko's Development Record</a>
+      <a class="blog-title" href="https://wonjidev.com/">Wonji Ko's Development Record</a>
     </nav>
   </header>
 
   <main>
-    <a class="back-link" href="/">← 목록으로</a>
+    <a class="back-link" href="/" id="back-link">← 목록으로</a>
     <div id="post-container">
       <p class="loading">글을 불러오는 중...</p>
     </div>
   </main>
 
   <footer>
-    <p>wonjiko6718.github.io</p>
+    <p>wonjidev.com</p>
   </footer>
 
   <script>
     async function loadPost() {
       const container = document.getElementById('post-container');
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
+      const params    = new URLSearchParams(window.location.search);
+      const id        = params.get('id');  // 예: "UnrealEngine/2026-05-11-build-error"
 
       if (!id) {
         container.innerHTML = '<div class="error-msg">글 ID가 없습니다. <a href="/">목록으로 돌아가기</a></div>';
         return;
       }
 
+      // 게시판(폴더)이 있으면 뒤로가기 링크에 게시판 정보 반영
+      const parts = id.split('/');
+      if (parts.length > 1) {
+        const board = parts[0];
+        document.getElementById('back-link').href = `/?board=${encodeURIComponent(board)}`;
+        document.getElementById('back-link').textContent = `← ${board} 목록으로`;
+      }
+
       try {
+        // id가 "폴더/파일명" 형태이면 /posts/폴더/파일명.md 로 fetch
         const res = await fetch(`/posts/${id}.md`);
         if (!res.ok) throw new Error('글을 찾을 수 없습니다.');
         const raw = await res.text();
 
-        // Front matter (--- ... ---) 파싱 후 본문 분리
+        // Front matter 파싱
         const fmMatch = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
         let meta = {};
         let body = raw;
@@ -56,18 +64,19 @@
           });
         }
 
-        // 페이지 제목 업데이트
-        if (meta.title) {
-          document.title = meta.title + ' - 내 블로그';
-        }
+        if (meta.title) document.title = meta.title + " - Wonji Ko's Development Record";
 
-        // HTML 렌더링
+        // 카테고리 파싱
+        const categories = meta.category
+          ? meta.category.split(',').map(c => c.trim()).filter(Boolean)
+          : [];
+
         container.innerHTML = `
           <article>
             <div class="post-header">
               <h1>${meta.title || id}</h1>
               <div class="post-meta">
-                ${meta.category ? `<span class="post-category">${meta.category}</span>` : ''}
+                ${categories.map(c => `<span class="post-category">${c}</span>`).join('')}
                 ${meta.date ? `<span class="post-date">${meta.date}</span>` : ''}
               </div>
             </div>

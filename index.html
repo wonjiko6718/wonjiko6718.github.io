@@ -6,7 +6,6 @@
   <title>Wonji Ko's Development Record</title>
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
-    /* 전체 레이아웃 */
     .layout {
       max-width: 1000px;
       margin: 0 auto;
@@ -92,14 +91,74 @@
       text-decoration: none;
     }
 
-    .profile-link svg {
-      flex-shrink: 0;
+    .profile-link svg { flex-shrink: 0; }
+
+    /* 게시판 목록 */
+    .board-section {
+      width: 100%;
+      text-align: left;
     }
 
-    /* 헤더 max-width */
-    header nav {
-      max-width: 1000px;
+    .board-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      padding-left: 4px;
     }
+
+    .board-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 100%;
+    }
+
+    .board-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text2);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-align: left;
+    }
+
+    .board-btn:hover {
+      background: var(--bg2);
+      color: var(--text);
+    }
+
+    .board-btn.active {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .board-btn .board-count {
+      font-size: 11px;
+      color: var(--text2);
+      background: var(--bg2);
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+
+    .board-btn.active .board-count {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* 헤더 */
+    header nav { max-width: 1000px; }
 
     /* 검색 */
     .search-wrap {
@@ -120,9 +179,7 @@
       font-family: inherit;
     }
 
-    .search-input:focus {
-      border-color: var(--accent);
-    }
+    .search-input:focus { border-color: var(--accent); }
 
     .search-icon {
       position: absolute;
@@ -134,10 +191,23 @@
       pointer-events: none;
     }
 
-    .search-result-count {
+    /* 게시판 헤더 */
+    .board-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .board-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .result-count {
       font-size: 13px;
       color: var(--text2);
-      margin-bottom: 12px;
     }
 
     .no-results {
@@ -153,19 +223,15 @@
       flex-wrap: wrap;
     }
 
-    /* ================================
-       카테고리 색상 정의
-       카테고리 이름에 따라 색상 자동 지정
-       새 카테고리 추가 시 여기에 추가
-    ================================ */
+    /* 카테고리 색상 */
     .cat-blue   { background: #e8f0fe; color: #1a73e8; }
     .cat-green  { background: #e6f4ea; color: #1e8e3e; }
     .cat-red    { background: #fce8e6; color: #d93025; }
     .cat-yellow { background: #fef7e0; color: #f29900; }
     .cat-purple { background: #f3e8fd; color: #9334e6; }
     .cat-gray   { background: #f1f3f4; color: #5f6368; }
-    .cat-lime   { background: #f2fce4; color: #4caf11; }  /* 연두색 */
-    .cat-sky    { background: #e4f6fd; color: #0097c7; }  /* 하늘색 */
+    .cat-lime   { background: #f2fce4; color: #4caf11; }
+    .cat-sky    { background: #e4f6fd; color: #0097c7; }
 
     @media (prefers-color-scheme: dark) {
       .cat-blue   { background: #1a2740; color: #8ab4f8; }
@@ -174,8 +240,8 @@
       .cat-yellow { background: #2e2510; color: #fdd663; }
       .cat-purple { background: #2a1a3e; color: #d7aefb; }
       .cat-gray   { background: #2e2e2e; color: #9aa0a6; }
-      .cat-lime   { background: #1e2e10; color: #a8d878; }  /* 연두색 다크 */
-      .cat-sky    { background: #102030; color: #67d0f5; }  /* 하늘색 다크 */
+      .cat-lime   { background: #1e2e10; color: #a8d878; }
+      .cat-sky    { background: #102030; color: #67d0f5; }
     }
 
     mark {
@@ -185,18 +251,55 @@
       padding: 0 2px;
     }
 
-    /* 메인 콘텐츠 */
-    .main-content {
-      min-width: 0;
+    .main-content { min-width: 0; }
+
+    /* 페이지네이션 */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 24px;
     }
 
-    /* 모바일 대응 */
+    .page-btn {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      font-family: inherit;
+    }
+
+    .page-btn:hover:not(:disabled) {
+      background: var(--bg2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .page-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .page-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    /* 모바일 */
     @media (max-width: 640px) {
       .layout {
         grid-template-columns: 1fr;
         padding: 24px 16px;
       }
-
       .sidebar {
         position: static;
         flex-direction: row;
@@ -204,23 +307,17 @@
         flex-wrap: wrap;
         gap: 16px;
       }
-
-      .profile-avatar,
-      .profile-img {
+      .profile-avatar, .profile-img {
         width: 64px;
         height: 64px;
         font-size: 28px;
         flex-shrink: 0;
       }
-
-      .profile-links {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-
-      .profile-divider {
-        display: none;
-      }
+      .profile-links { flex-direction: row; flex-wrap: wrap; }
+      .profile-divider { display: none; }
+      .board-section { width: 100%; }
+      .board-list { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+      .board-btn { width: auto; }
     }
   </style>
 </head>
@@ -234,7 +331,7 @@
 
   <div class="layout">
 
-    <!-- 좌측 사이드바 프로필 -->
+    <!-- 좌측 사이드바 -->
     <aside class="sidebar">
       <img
         class="profile-img"
@@ -251,6 +348,7 @@
         Graphics Simulation Engineer<br>
         AI Integrated Expert
       </div>
+
       <div class="profile-divider"></div>
 
       <div class="profile-links">
@@ -261,9 +359,18 @@
           GitHub
         </a>
       </div>
+
+      <div class="profile-divider"></div>
+
+      <!-- 게시판 목록 (JS로 자동 생성) -->
+      <div class="board-section">
+        <div class="board-section-title">게시판</div>
+        <div class="board-list" id="board-list"></div>
+      </div>
+
     </aside>
 
-    <!-- 우측 메인 콘텐츠 -->
+    <!-- 우측 메인 -->
     <div class="main-content">
       <div class="search-wrap">
         <input
@@ -276,11 +383,16 @@
         <span class="search-icon">🔍</span>
       </div>
 
-      <div class="search-result-count" id="result-count"></div>
+      <div class="board-header">
+        <span class="board-title" id="board-title">전체 글</span>
+        <span class="result-count" id="result-count"></span>
+      </div>
 
       <ul class="post-list" id="post-list">
         <li class="loading">글 목록을 불러오는 중...</li>
       </ul>
+
+      <div class="pagination" id="pagination"></div>
     </div>
 
   </div>
@@ -290,10 +402,6 @@
   </footer>
 
   <script>
-    // ================================
-    // 카테고리 → 색상 클래스 매핑
-    // 새 카테고리 추가 시 여기에 추가하세요
-    // ================================
     const CATEGORY_COLORS = {
       'UnrealEngine':    'cat-blue',
       'AI':    'cat-green',
@@ -301,15 +409,22 @@
       'Common':    'cat-yellow',
       'Custom':    'cat-red',
       'Base':  'cat-gray',
-      'Python':  'cat-lime',   // 연두색
-      'C++':    'cat-sky',    // 하늘색
+      'Python':  'cat-lime',   
+      'C++':    'cat-sky',   
     };
+
+    const PAGE_SIZE = 10;
+
+    let allPosts      = [];
+    let filteredPosts = [];
+    let boards        = [];
+    let currentPage   = 1;
+    let activeBoard   = null;  // null = 전체
+    let searchQuery   = '';
 
     function getCategoryClass(name) {
       return CATEGORY_COLORS[name] || 'cat-gray';
     }
-
-    let allPosts = [];
 
     function highlight(text, query) {
       if (!query) return text;
@@ -317,59 +432,135 @@
       return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
     }
 
+    function getCategories(post) {
+      return Array.isArray(post.category)
+        ? post.category
+        : (post.category ? [post.category] : []);
+    }
+
     function renderCategories(categories, query) {
-      const list = Array.isArray(categories)
-        ? categories
-        : (categories ? [categories] : []);
-      if (list.length === 0) return '';
+      if (categories.length === 0) return '';
       return `<span class="post-categories">
-        ${list.map(c =>
+        ${categories.map(c =>
           `<span class="post-category ${getCategoryClass(c)}">${highlight(c, query)}</span>`
         ).join('')}
       </span>`;
     }
 
-    function renderPosts(posts, query = '') {
-      const list = document.getElementById('post-list');
-      const countEl = document.getElementById('result-count');
+    /* 게시판 버튼 생성 */
+    function buildBoardButtons() {
+      const wrap = document.getElementById('board-list');
+      wrap.innerHTML = '';
 
-      if (posts.length === 0) {
-        list.innerHTML = `<li class="no-results">검색 결과가 없습니다.</li>`;
-        countEl.textContent = query ? `"${query}" 검색 결과 0개` : '';
+      // 전체 버튼
+      const allCount = allPosts.length;
+      const allBtn = document.createElement('button');
+      allBtn.className = 'board-btn' + (activeBoard === null ? ' active' : '');
+      allBtn.innerHTML = `<span>전체</span><span class="board-count">${allCount}</span>`;
+      allBtn.onclick = () => selectBoard(null);
+      wrap.appendChild(allBtn);
+
+      // 폴더별 버튼
+      boards.forEach(board => {
+        const count = allPosts.filter(p => p.board === board).length;
+        const btn = document.createElement('button');
+        btn.className = 'board-btn' + (activeBoard === board ? ' active' : '');
+        btn.innerHTML = `<span>${board}</span><span class="board-count">${count}</span>`;
+        btn.onclick = () => selectBoard(board);
+        wrap.appendChild(btn);
+      });
+    }
+
+    function selectBoard(board) {
+      activeBoard = board;
+      currentPage = 1;
+      document.getElementById('board-title').textContent = board || '전체 글';
+      applyFilters();
+      buildBoardButtons();
+    }
+
+    /* 필터 적용 */
+    function applyFilters() {
+      const q = searchQuery.trim().toLowerCase();
+
+      filteredPosts = allPosts.filter(post => {
+        // 게시판 필터
+        if (activeBoard && post.board !== activeBoard) return false;
+
+        // 검색어 필터
+        if (q) {
+          const cats    = getCategories(post);
+          const inTitle = post.title.toLowerCase().includes(q);
+          const inCat   = cats.some(c => c.toLowerCase().includes(q));
+          if (!inTitle && !inCat) return false;
+        }
+
+        return true;
+      });
+
+      currentPage = 1;
+      renderPage();
+    }
+
+    /* 현재 페이지 렌더링 */
+    function renderPage() {
+      const list    = document.getElementById('post-list');
+      const countEl = document.getElementById('result-count');
+      const q       = searchQuery.trim();
+
+      if (filteredPosts.length === 0) {
+        list.innerHTML = `<li class="no-results">게시물이 없습니다.</li>`;
+        countEl.textContent = '';
+        renderPagination(0);
         return;
       }
 
-      countEl.textContent = query
-        ? `"${query}" 검색 결과 ${posts.length}개`
-        : `전체 ${posts.length}개`;
+      const total      = filteredPosts.length;
+      const totalPages = Math.ceil(total / PAGE_SIZE);
+      const start      = (currentPage - 1) * PAGE_SIZE;
+      const pagePosts  = filteredPosts.slice(start, start + PAGE_SIZE);
 
-      list.innerHTML = posts.map(post => `
+      countEl.textContent = `${total}개`;
+
+      list.innerHTML = pagePosts.map(post => `
         <li class="post-item">
-          <a class="post-link" href="/post.html?id=${post.id}">
-            <span class="post-title">${highlight(post.title, query)}</span>
+          <a class="post-link" href="/post.html?id=${encodeURIComponent(post.id)}">
+            <span class="post-title">${highlight(post.title, q)}</span>
             <span class="post-meta">
-              ${renderCategories(post.category, query)}
+              ${renderCategories(getCategories(post), q)}
               <span class="post-date">${post.date}</span>
             </span>
           </a>
         </li>
       `).join('');
+
+      renderPagination(totalPages);
     }
 
-    function filterPosts(query) {
-      if (!query.trim()) {
-        renderPosts(allPosts, '');
-        return;
+    /* 페이지네이션 */
+    function renderPagination(totalPages) {
+      const wrap = document.getElementById('pagination');
+      if (totalPages <= 1) { wrap.innerHTML = ''; return; }
+
+      let html = '';
+      html += `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+          html += `<button class="page-btn" disabled>…</button>`;
+        }
       }
-      const q = query.trim().toLowerCase();
-      const filtered = allPosts.filter(post => {
-        if (post.title.toLowerCase().includes(q)) return true;
-        const categories = Array.isArray(post.category)
-          ? post.category
-          : (post.category ? [post.category] : []);
-        return categories.some(c => c.toLowerCase().includes(q));
-      });
-      renderPosts(filtered, query.trim());
+
+      html += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+      wrap.innerHTML = html;
+    }
+
+    function goPage(page) {
+      currentPage = page;
+      renderPage();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function loadPosts() {
@@ -377,14 +568,28 @@
       try {
         const res = await fetch('/posts/list.json');
         if (!res.ok) throw new Error('list.json을 찾을 수 없습니다.');
-        allPosts = await res.json();
-        renderPosts(allPosts);
+        const data = await res.json();
 
+        // 이전 형식(배열) 하위 호환 처리
+        if (Array.isArray(data)) {
+          allPosts = data;
+          boards   = [...new Set(data.map(p => p.board).filter(Boolean))];
+        } else {
+          allPosts = data.posts  || [];
+          boards   = data.boards || [];
+        }
+
+        filteredPosts = [...allPosts];
+        buildBoardButtons();
+        renderPage();
+
+        // URL 검색어 자동 적용
         const params = new URLSearchParams(window.location.search);
         const q = params.get('q');
         if (q) {
           document.getElementById('search-input').value = q;
-          filterPosts(q);
+          searchQuery = q;
+          applyFilters();
         }
       } catch (e) {
         list.innerHTML = `<li style="padding:20px"><div class="error-msg">오류: ${e.message}</div></li>`;
@@ -392,7 +597,8 @@
     }
 
     document.getElementById('search-input').addEventListener('input', e => {
-      filterPosts(e.target.value);
+      searchQuery = e.target.value;
+      applyFilters();
     });
 
     loadPosts();

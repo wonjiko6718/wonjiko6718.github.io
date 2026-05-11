@@ -23,17 +23,10 @@ def parse_front_matter(filepath):
 
 
 def parse_categories(raw):
-    """쉼표로 구분된 카테고리 문자열 → 리스트 반환
-    예) "일상, 여행, 사진" → ["일상", "여행", "사진"]
-    """
+    """쉼표로 구분된 카테고리 문자열 → 리스트"""
     if not raw:
         return []
     return [c.strip() for c in raw.split(",") if c.strip()]
-
-
-def get_post_id(filename):
-    """파일명에서 .md 제거해 id 반환"""
-    return os.path.splitext(filename)[0]
 
 
 def build_list():
@@ -42,27 +35,58 @@ def build_list():
         return
 
     posts = []
-    for filename in sorted(os.listdir(POSTS_DIR), reverse=True):
-        if not filename.endswith(".md"):
-            continue
+    boards = []  # 폴더(게시판) 목록
 
+    # posts/ 루트의 MD 파일 (폴더 없이 바로 있는 글)
+    root_mds = []
+    for filename in sorted(os.listdir(POSTS_DIR), reverse=True):
         filepath = os.path.join(POSTS_DIR, filename)
-        meta     = parse_front_matter(filepath)
-        post_id  = get_post_id(filename)
+        if os.path.isfile(filepath) and filename.endswith(".md"):
+            root_mds.append((filename, filepath, None))
+
+    # posts/ 하위 폴더 탐색
+    folder_entries = []
+    for entry in sorted(os.listdir(POSTS_DIR)):
+        entry_path = os.path.join(POSTS_DIR, entry)
+        if os.path.isdir(entry_path):
+            boards.append(entry)
+            print(f"\n📁 게시판: {entry}")
+            for filename in sorted(os.listdir(entry_path), reverse=True):
+                filepath = os.path.join(entry_path, filename)
+                if os.path.isfile(filepath) and filename.endswith(".md"):
+                    folder_entries.append((filename, filepath, entry))
+
+    # 루트 MD + 폴더 MD 합치기 (폴더 글 먼저, 루트 글 나중)
+    all_entries = folder_entries + root_mds
+
+    for filename, filepath, board in all_entries:
+        meta    = parse_front_matter(filepath)
+        post_id = os.path.splitext(filename)[0]
+
+        # id는 폴더가 있으면 "폴더명/파일명" 형태로 저장
+        full_id = f"{board}/{post_id}" if board else post_id
 
         posts.append({
-            "id":        post_id,
+            "id":        full_id,
             "title":     meta.get("title", post_id),
             "date":      meta.get("date", ""),
-            "category":  parse_categories(meta.get("category", "")),  # ← 리스트로 저장
+            "category":  parse_categories(meta.get("category", "")),
             "thumbnail": meta.get("thumbnail", ""),
+            "board":     board or "",  # 게시판(폴더)명
         })
-        print(f"  ✔ {filename}  |  카테고리: {posts[-1]['category']}")
+        print(f"  ✔ {full_id}")
+
+    # list.json 저장
+    output = {
+        "boards": boards,   # 게시판 목록
+        "posts":  posts,    # 전체 글 목록
+    }
 
     with open(LIST_JSON, "w", encoding="utf-8") as f:
-        json.dump(posts, f, ensure_ascii=False, indent=2)
+        json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅ list.json 업데이트 완료 ({len(posts)}개 글)")
+    print(f"\n✅ list.json 업데이트 완료")
+    print(f"   게시판 {len(boards)}개 / 글 {len(posts)}개")
 
 
 if __name__ == "__main__":
