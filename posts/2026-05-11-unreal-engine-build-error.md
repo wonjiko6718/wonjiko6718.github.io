@@ -28,5 +28,5 @@ Engine - Saved - BuildConfiguration.xml에 다음 구문 추가
 
 ## 상수 산술 연산 오버플로우 : 오류가 난 INFINITY 매크로를 다음으로 교체
 ```C++
-console.log("Hello, World!");
+std::numeric_limits<float>::infinity()
 ```
