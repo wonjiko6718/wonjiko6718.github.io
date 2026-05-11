@@ -1,7 +1,7 @@
 ---
 title: list json 파일 자동화 테스트
 date: 2026-05-11
-category: 테스트
+category: UnrealEngine, Python
 ---
 
 # 자동화 테스트

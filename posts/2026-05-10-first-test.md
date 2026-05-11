@@ -1,7 +1,7 @@
 ---
 title: 첫 번째 글-테스트
 date: 2026-05-10
-category: 테스트
+category: UnrealEngine, OpenCV
 ---
 
 # 마크다운 테스트!

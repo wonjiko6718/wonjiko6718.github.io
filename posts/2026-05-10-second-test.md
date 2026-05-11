@@ -1,7 +1,7 @@
 ---
 title: 각종 기능 테스트
 date: 2026-05-10
-category: 테스트
+category: Python, C++
 ---
 
 # 이미지 테스트

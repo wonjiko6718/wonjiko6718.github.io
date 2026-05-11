@@ -51,6 +51,13 @@
       font-size: 15px;
     }
 
+    /* 카테고리 여러 개 나란히 */
+    .post-categories {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
     mark {
       background: var(--accent-light);
       color: var(--accent);
@@ -99,6 +106,18 @@
       return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
     }
 
+    function renderCategories(categories, query) {
+      // categories가 문자열이면 배열로 변환 (하위 호환)
+      const list = Array.isArray(categories)
+        ? categories
+        : (categories ? [categories] : []);
+
+      if (list.length === 0) return '';
+      return `<span class="post-categories">
+        ${list.map(c => `<span class="post-category">${highlight(c, query)}</span>`).join('')}
+      </span>`;
+    }
+
     function renderPosts(posts, query = '') {
       const list = document.getElementById('post-list');
       const countEl = document.getElementById('result-count');
@@ -118,7 +137,7 @@
           <a class="post-link" href="/post.html?id=${post.id}">
             <span class="post-title">${highlight(post.title, query)}</span>
             <span class="post-meta">
-              ${post.category ? `<span class="post-category">${highlight(post.category, query)}</span>` : ''}
+              ${renderCategories(post.category, query)}
               <span class="post-date">${post.date}</span>
             </span>
           </a>
@@ -132,10 +151,15 @@
         return;
       }
       const q = query.trim().toLowerCase();
-      const filtered = allPosts.filter(post =>
-        post.title.toLowerCase().includes(q) ||
-        (post.category && post.category.toLowerCase().includes(q))
-      );
+      const filtered = allPosts.filter(post => {
+        // 제목 검색
+        if (post.title.toLowerCase().includes(q)) return true;
+        // 카테고리 검색 (배열 또는 문자열 모두 처리)
+        const categories = Array.isArray(post.category)
+          ? post.category
+          : (post.category ? [post.category] : []);
+        return categories.some(c => c.toLowerCase().includes(q));
+      });
       renderPosts(filtered, query.trim());
     }
 
