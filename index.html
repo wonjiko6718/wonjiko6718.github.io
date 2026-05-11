@@ -6,6 +6,102 @@
   <title>Wonji Ko's Development Record</title>
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
+    /* 전체 레이아웃 */
+    .layout {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* 사이드바 */
+    .sidebar {
+      position: sticky;
+      top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      background: var(--bg2);
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    .profile-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .profile-bio {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .profile-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .profile-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .profile-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text2);
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+
+    .profile-link:hover {
+      background: var(--bg2);
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .profile-link svg {
+      flex-shrink: 0;
+    }
+
+    /* 헤더 max-width */
+    header nav {
+      max-width: 1000px;
+    }
+
+    /* 검색 */
     .search-wrap {
       margin-bottom: 20px;
       position: relative;
@@ -51,11 +147,35 @@
       font-size: 15px;
     }
 
-    /* 카테고리 여러 개 나란히 */
     .post-categories {
       display: flex;
       gap: 4px;
       flex-wrap: wrap;
+    }
+
+    /* ================================
+       카테고리 색상 정의
+       카테고리 이름에 따라 색상 자동 지정
+       새 카테고리 추가 시 여기에 추가
+    ================================ */
+    .cat-blue   { background: #e8f0fe; color: #1a73e8; }
+    .cat-green  { background: #e6f4ea; color: #1e8e3e; }
+    .cat-red    { background: #fce8e6; color: #d93025; }
+    .cat-yellow { background: #fef7e0; color: #f29900; }
+    .cat-purple { background: #f3e8fd; color: #9334e6; }
+    .cat-gray   { background: #f1f3f4; color: #5f6368; }
+    .cat-lime   { background: #f2fce4; color: #4caf11; }  /* 연두색 */
+    .cat-sky    { background: #e4f6fd; color: #0097c7; }  /* 하늘색 */
+
+    @media (prefers-color-scheme: dark) {
+      .cat-blue   { background: #1a2740; color: #8ab4f8; }
+      .cat-green  { background: #1a2e1f; color: #81c995; }
+      .cat-red    { background: #2e1a18; color: #f28b82; }
+      .cat-yellow { background: #2e2510; color: #fdd663; }
+      .cat-purple { background: #2a1a3e; color: #d7aefb; }
+      .cat-gray   { background: #2e2e2e; color: #9aa0a6; }
+      .cat-lime   { background: #1e2e10; color: #a8d878; }  /* 연두색 다크 */
+      .cat-sky    { background: #102030; color: #67d0f5; }  /* 하늘색 다크 */
     }
 
     mark {
@@ -64,40 +184,128 @@
       border-radius: 2px;
       padding: 0 2px;
     }
+
+    /* 메인 콘텐츠 */
+    .main-content {
+      min-width: 0;
+    }
+
+    /* 모바일 대응 */
+    @media (max-width: 640px) {
+      .layout {
+        grid-template-columns: 1fr;
+        padding: 24px 16px;
+      }
+
+      .sidebar {
+        position: static;
+        flex-direction: row;
+        text-align: left;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .profile-avatar,
+      .profile-img {
+        width: 64px;
+        height: 64px;
+        font-size: 28px;
+        flex-shrink: 0;
+      }
+
+      .profile-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .profile-divider {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
 
   <header>
     <nav>
-      <a class="blog-title" href="/">Wonji Ko's Development Record</a>
+      <a class="blog-title" href="https://wonjidev.com/">Wonji Ko's Development Record</a>
     </nav>
   </header>
 
-  <main>
-    <div class="search-wrap">
-      <input
-        class="search-input"
-        id="search-input"
-        type="text"
-        placeholder="제목 또는 카테고리로 검색..."
-        autocomplete="off"
+  <div class="layout">
+
+    <!-- 좌측 사이드바 프로필 -->
+    <aside class="sidebar">
+      <img
+        class="profile-img"
+        id="profile-img"
+        src="/assets/images/profile.jpg"
+        alt="프로필 사진"
+        onerror="this.style.display='none'; document.getElementById('profile-avatar').style.display='flex';"
       >
-      <span class="search-icon">🔍</span>
+      <div class="profile-avatar" id="profile-avatar" style="display:none;">👤</div>
+
+      <div class="profile-name">Wonji Ko</div>
+      <div class="profile-bio">한 줄 소개를 여기에 입력하세요.</div>
+
+      <div class="profile-divider"></div>
+
+      <div class="profile-links">
+        <a class="profile-link" href="https://github.com/wonjiko6718" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </aside>
+
+    <!-- 우측 메인 콘텐츠 -->
+    <div class="main-content">
+      <div class="search-wrap">
+        <input
+          class="search-input"
+          id="search-input"
+          type="text"
+          placeholder="제목 또는 카테고리로 검색..."
+          autocomplete="off"
+        >
+        <span class="search-icon">🔍</span>
+      </div>
+
+      <div class="search-result-count" id="result-count"></div>
+
+      <ul class="post-list" id="post-list">
+        <li class="loading">글 목록을 불러오는 중...</li>
+      </ul>
     </div>
 
-    <div class="search-result-count" id="result-count"></div>
-
-    <ul class="post-list" id="post-list">
-      <li class="loading">글 목록을 불러오는 중...</li>
-    </ul>
-  </main>
+  </div>
 
   <footer>
-    <p>wonjiko6718.github.io</p>
+    <p>wonjidev.com</p>
   </footer>
 
   <script>
+    // ================================
+    // 카테고리 → 색상 클래스 매핑
+    // 새 카테고리 추가 시 여기에 추가하세요
+    // ================================
+    const CATEGORY_COLORS = {
+      'UnrealEngine':    'cat-blue',
+      'AI':    'cat-green',
+      'UnrealC++':    'cat-purple',
+      'Common':    'cat-yellow',
+      'Custom':    'cat-red',
+      'Base':  'cat-gray',
+      'Python':  'cat-lime',   // 연두색
+      'C++':    'cat-sky',    // 하늘색
+    };
+
+    function getCategoryClass(name) {
+      return CATEGORY_COLORS[name] || 'cat-gray';
+    }
+
     let allPosts = [];
 
     function highlight(text, query) {
@@ -107,14 +315,14 @@
     }
 
     function renderCategories(categories, query) {
-      // categories가 문자열이면 배열로 변환 (하위 호환)
       const list = Array.isArray(categories)
         ? categories
         : (categories ? [categories] : []);
-
       if (list.length === 0) return '';
       return `<span class="post-categories">
-        ${list.map(c => `<span class="post-category">${highlight(c, query)}</span>`).join('')}
+        ${list.map(c =>
+          `<span class="post-category ${getCategoryClass(c)}">${highlight(c, query)}</span>`
+        ).join('')}
       </span>`;
     }
 
@@ -152,9 +360,7 @@
       }
       const q = query.trim().toLowerCase();
       const filtered = allPosts.filter(post => {
-        // 제목 검색
         if (post.title.toLowerCase().includes(q)) return true;
-        // 카테고리 검색 (배열 또는 문자열 모두 처리)
         const categories = Array.isArray(post.category)
           ? post.category
           : (post.category ? [post.category] : []);
@@ -171,7 +377,6 @@
         allPosts = await res.json();
         renderPosts(allPosts);
 
-        // URL에 검색어가 있으면 자동 적용 (?q=검색어)
         const params = new URLSearchParams(window.location.search);
         const q = params.get('q');
         if (q) {
