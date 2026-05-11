@@ -1,6 +1,8 @@
 {
   "boards": [
-    "언리얼 엔진"
+    "언리얼 엔진",
+    "테스트 게시판 1",
+    "테스트 게시판 2"
   ],
   "posts": [
     {
@@ -13,6 +15,126 @@
       ],
       "thumbnail": "",
       "board": "언리얼 엔진"
+    },
+    {
+      "id": "테스트 게시판 1/2026-05-11-python-environment5",
+      "title": "강화학습 구축 5",
+      "date": "2026-05-11",
+      "category": [
+        "Python",
+        "AI"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 1"
+    },
+    {
+      "id": "테스트 게시판 1/2026-05-11-python-environment4",
+      "title": "강화학습 구축 4",
+      "date": "2026-05-11",
+      "category": [
+        "Python",
+        "AI"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 1"
+    },
+    {
+      "id": "테스트 게시판 1/2026-05-11-python-environment3",
+      "title": "강화학습 구축 3",
+      "date": "2026-05-11",
+      "category": [
+        "Python",
+        "AI"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 1"
+    },
+    {
+      "id": "테스트 게시판 1/2026-05-11-python-environment2",
+      "title": "강화학습 구축 2",
+      "date": "2026-05-11",
+      "category": [
+        "Python",
+        "AI"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 1"
+    },
+    {
+      "id": "테스트 게시판 1/2026-05-11-python-environment1",
+      "title": "강화학습 구축 1",
+      "date": "2026-05-11",
+      "category": [
+        "Python",
+        "AI"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 1"
+    },
+    {
+      "id": "테스트 게시판 2/2026-05-11-make-camera-simulation5",
+      "title": "언리얼 엔진 카메라 시뮬레이션 구현 1",
+      "date": "2026-05-11",
+      "category": [
+        "UnrealEngine",
+        "UnrealC++",
+        "OpenCV",
+        "C++"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 2"
+    },
+    {
+      "id": "테스트 게시판 2/2026-05-11-make-camera-simulation4",
+      "title": "언리얼 엔진 카메라 시뮬레이션 구현 4",
+      "date": "2026-05-11",
+      "category": [
+        "UnrealEngine",
+        "UnrealC++",
+        "OpenCV",
+        "C++"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 2"
+    },
+    {
+      "id": "테스트 게시판 2/2026-05-11-make-camera-simulation3",
+      "title": "언리얼 엔진 카메라 시뮬레이션 구현 3",
+      "date": "2026-05-11",
+      "category": [
+        "UnrealEngine",
+        "UnrealC++",
+        "OpenCV",
+        "C++"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 2"
+    },
+    {
+      "id": "테스트 게시판 2/2026-05-11-make-camera-simulation2",
+      "title": "언리얼 엔진 카메라 시뮬레이션 구현 2",
+      "date": "2026-05-11",
+      "category": [
+        "UnrealEngine",
+        "UnrealC++",
+        "OpenCV",
+        "C++"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 2"
+    },
+    {
+      "id": "테스트 게시판 2/2026-05-11-make-camera-simulation1",
+      "title": "언리얼 엔진 카메라 시뮬레이션 구현 1",
+      "date": "2026-05-11",
+      "category": [
+        "UnrealEngine",
+        "UnrealC++",
+        "OpenCV",
+        "C++"
+      ],
+      "thumbnail": "",
+      "board": "테스트 게시판 2"
     }
   ]
 }
